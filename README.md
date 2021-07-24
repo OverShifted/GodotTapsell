@@ -4,7 +4,7 @@ Currently only supports rewarded video ads.
 
 Tested on Godot 3.3.2 and Android Q
 
-## Install Plugin
+## Installation
 1. Download the zip file provided [here](https://github.com/OverShifted/GodotTapsell/releases)
 .
 2. Extract `arr` and `gdap` files in `res://android/plugins` of your Godot project
