@@ -33,16 +33,16 @@ public class GodotTapsell extends GodotPlugin {
 
     @NonNull
     public Set<SignalInfo> getPluginSignals() {
-        ArraySet<SignalInfo> arraySet = new ArraySet<SignalInfo>();
+        ArraySet<SignalInfo> signals = new ArraySet<SignalInfo>();
 
-        arraySet.add(new SignalInfo("request_ad_on_ad_available", String.class));
-        arraySet.add(new SignalInfo("request_ad_on_error", String.class));
-        arraySet.add(new SignalInfo("show_ad_on_opened"));
-        arraySet.add(new SignalInfo("show_ad_on_closed"));
-        arraySet.add(new SignalInfo("show_ad_on_error", String.class));
-        arraySet.add(new SignalInfo("show_ad_on_rewarded", boolean.class));
+        signals.add(new SignalInfo("request_ad_on_ad_available", String.class));
+        signals.add(new SignalInfo("request_ad_on_error", String.class));
+        signals.add(new SignalInfo("show_ad_on_opened"));
+        signals.add(new SignalInfo("show_ad_on_closed"));
+        signals.add(new SignalInfo("show_ad_on_error", String.class));
+        signals.add(new SignalInfo("show_ad_on_rewarded", boolean.class));
 
-        return arraySet;
+        return signals;
     }
 
     @UsedByGodot
