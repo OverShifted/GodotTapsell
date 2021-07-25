@@ -32,8 +32,8 @@ func _ready():
 func request_ad():
 	plugin.request_ad(zone_key)
 	
-func _request_ad_on_ad_available(message : String):
-	emit_signal("request_ad_on_ad_available", message)
+func _request_ad_on_ad_available(ad_id : String):
+	emit_signal("request_ad_on_ad_available", ad_id)
 	plugin.show_ad()
 
 func _request_ad_on_error(message : String):

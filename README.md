@@ -22,7 +22,7 @@ Connect signals using `Tapsell.connect("signal_name", self, "target_function_nam
 
 Available signals:
 ```
-request_ad_on_ad_available(message: String)
+request_ad_on_ad_available(ad_id: String)
 request_ad_on_error(message: String)
 show_ad_on_opened()
 show_ad_on_closed()
