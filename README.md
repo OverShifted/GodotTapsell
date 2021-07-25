@@ -22,14 +22,14 @@ Connect signals using `Tapsell.connect("signal_name", self, "target_function_nam
 
 Available signals:
 ```
-request_ad_on_ad_available(ad_id: String)
-request_ad_on_error(message: String)
-show_ad_on_opened()
-show_ad_on_closed()
-show_ad_on_error(message: String)
-show_ad_on_rewarded(reward: bool)
+signal ad_available(ad_id: String)
+signal ad_request_error(message: String)
+signal ad_opened
+signal ad_closed
+signal ad_show_error(message: String)
+signal rewarded(reward: bool)
 ```
 
-When `show_ad_on_rewarded` signal is emmited with `reward` being `true`; you can give a reward to the user.
+When `rewarded` signal is emmited with `reward` being `true`; you can give a reward to the user.
 
 For more information see [here (Farsi)](https://docs.tapsell.ir/tapsell-sdk/android/rewarded-interstitial/) or [here (English)](https://docs.tapsell.ir/en/tapsell-sdk/android/rewarded-interstitial/).
