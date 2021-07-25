@@ -58,13 +58,13 @@ public class GodotTapsell extends GodotPlugin {
                 public void onAdAvailable(String ad_id) {
                     m_ad_id = ad_id;
                     emitSignal("request_ad_on_ad_available", ad_id);
-                    Toast.makeText(m_activity, "requestAd: " + ad_id, Toast.LENGTH_LONG).show();
+                    // Toast.makeText(m_activity, "requestAd: " + ad_id, Toast.LENGTH_LONG).show();
                 }
 
                 public void onError(String message) {
                     m_ad_id = "";
                     emitSignal("request_ad_on_error", message);
-                    Toast.makeText(m_activity, "requestAd error: " + message, Toast.LENGTH_LONG).show();
+                    // Toast.makeText(m_activity, "requestAd error: " + message, Toast.LENGTH_LONG).show();
                 }
             }
         );
@@ -76,22 +76,22 @@ public class GodotTapsell extends GodotPlugin {
             new TapsellAdShowListener() {
                 public void onOpened() {
                     emitSignal("show_ad_on_opened");
-                    Toast.makeText(m_activity, "Open", Toast.LENGTH_LONG).show();
+                    // Toast.makeText(m_activity, "Open", Toast.LENGTH_LONG).show();
                 }
 
                 public void onClosed() {
                     emitSignal("show_ad_on_closed");
-                    Toast.makeText(m_activity, "Close", Toast.LENGTH_LONG).show();
+                    // Toast.makeText(m_activity, "Close", Toast.LENGTH_LONG).show();
                 }
 
                 public void onError(String message) {
                     emitSignal("show_ad_on_error", message);
-                    Toast.makeText(m_activity, "showAd error: " + message, Toast.LENGTH_LONG).show();
+                    // Toast.makeText(m_activity, "showAd error: " + message, Toast.LENGTH_LONG).show();
                 }
 
                 public void onRewarded(boolean completed) {
                     emitSignal("show_ad_on_rewarded", completed);
-                    Toast.makeText(m_activity, "rewarded: " + completed, Toast.LENGTH_LONG).show();
+                    // Toast.makeText(m_activity, "rewarded: " + completed, Toast.LENGTH_LONG).show();
                 }
             }
         );
