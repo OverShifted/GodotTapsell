@@ -40,7 +40,7 @@ public class GodotTapsell extends GodotPlugin {
         signals.add(new SignalInfo("show_ad_on_opened"));
         signals.add(new SignalInfo("show_ad_on_closed"));
         signals.add(new SignalInfo("show_ad_on_error", String.class));
-        signals.add(new SignalInfo("show_ad_on_rewarded", boolean.class));
+        signals.add(new SignalInfo("show_ad_on_rewarded", Boolean.class));
 
         return signals;
     }
