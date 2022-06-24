@@ -18,7 +18,7 @@ Tested on Godot 3.3.2 and Android Q
 ## Using the API
 Any where is your code; use `Tapsell.request_ad()` to show an ad to the user.
 
-Connect signals using `Tapsell.connect("signal_name", self, "target_function_name")` to listen for diffrent events.
+Connect signals using `Tapsell.connect("signal_name", self, "target_function_name")` to listen for different events.
 
 Available signals:
 ```
