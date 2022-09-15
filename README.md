@@ -28,7 +28,6 @@ func on_video_ad_request_response(zone: String, id: String):
     Tapsell.show_video_ad(id)
 ```
 ### Standard banner ad
-> ⚠️ Warning: Banner ad removal is not implemented yet.
 
 Anywhere in your code:
 ```gd
@@ -43,4 +42,8 @@ In a `banner_ad_request_response` signal handler:
 ```gd
 func on_banner_ad_request_response(zone: String, id: String):
     Tapsell.show_banner_ad(id)
+```
+Anywhere in your code, to close the banner:
+```gd
+Tapsell.destroy_banner_ad(id)
 ```
