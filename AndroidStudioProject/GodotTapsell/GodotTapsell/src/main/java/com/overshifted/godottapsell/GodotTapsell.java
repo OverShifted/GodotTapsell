@@ -1,25 +1,32 @@
 package com.overshifted.godottapsell;
 
+import java.util.Set;
+
 import android.app.Activity;
-import android.widget.Toast;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.collection.ArraySet;
-import ir.tapsell.sdk.Tapsell;
-import ir.tapsell.sdk.TapsellAdRequestListener;
-import ir.tapsell.sdk.TapsellAdRequestOptions;
-import ir.tapsell.sdk.TapsellAdShowListener;
-import ir.tapsell.sdk.TapsellShowOptions;
-import java.util.Set;
+
 import org.godotengine.godot.Godot;
 import org.godotengine.godot.plugin.GodotPlugin;
 import org.godotengine.godot.plugin.SignalInfo;
 import org.godotengine.godot.plugin.UsedByGodot;
 
+import ir.tapsell.plus.AdRequestCallback;
+import ir.tapsell.plus.AdShowListener;
+import ir.tapsell.plus.TapsellPlus;
+import ir.tapsell.plus.TapsellPlusBannerType;
+import ir.tapsell.plus.TapsellPlusInitListener;
+import ir.tapsell.plus.model.AdNetworkError;
+import ir.tapsell.plus.model.AdNetworks;
+import ir.tapsell.plus.model.TapsellPlusAdModel;
+import ir.tapsell.plus.model.TapsellPlusErrorModel;
+
 public class GodotTapsell extends GodotPlugin {
 
     private Activity m_activity;
-    private String m_zone_id;
-    private String m_ad_id;
 
     public GodotTapsell(Godot godot) {
         super(godot);
@@ -33,69 +40,165 @@ public class GodotTapsell extends GodotPlugin {
 
     @NonNull
     public Set<SignalInfo> getPluginSignals() {
-        ArraySet<SignalInfo> signals = new ArraySet<SignalInfo>();
+        ArraySet<SignalInfo> signals = new ArraySet<>();
 
-        signals.add(new SignalInfo("request_ad_on_ad_available", String.class));
-        signals.add(new SignalInfo("request_ad_on_error", String.class));
-        signals.add(new SignalInfo("show_ad_on_opened"));
-        signals.add(new SignalInfo("show_ad_on_closed"));
-        signals.add(new SignalInfo("show_ad_on_error", String.class));
-        signals.add(new SignalInfo("show_ad_on_rewarded", Boolean.class));
+        signals.add(new SignalInfo("init_success"));
+        signals.add(new SignalInfo("init_failed", String.class, String.class));
+
+        signals.add(new SignalInfo("banner_ad_request_response", String.class, String.class));
+        signals.add(new SignalInfo("banner_ad_request_error", String.class, String.class));
+
+        signals.add(new SignalInfo("banner_ad_opened", String.class));
+        signals.add(new SignalInfo("banner_ad_closed", String.class));
+        signals.add(new SignalInfo("banner_ad_rewarded", String.class));
+        signals.add(new SignalInfo("banner_ad_show_error", String.class, String.class));
+
+        signals.add(new SignalInfo("video_ad_request_response", String.class, String.class));
+        signals.add(new SignalInfo("video_ad_request_error", String.class, String.class));
+
+        signals.add(new SignalInfo("video_ad_opened", String.class));
+        signals.add(new SignalInfo("video_ad_closed", String.class));
+        signals.add(new SignalInfo("video_ad_rewarded", String.class));
+        signals.add(new SignalInfo("video_ad_show_error", String.class, String.class));
 
         return signals;
     }
 
     @UsedByGodot
-    public void init(String key) {
-        Tapsell.initialize(m_activity.getApplication(), key);
+    public void init(String key, boolean p_override_gdrp) {
+        TapsellPlus.initialize(m_activity, key, new TapsellPlusInitListener() {
+            @Override
+            public void onInitializeSuccess(AdNetworks adNetworks) {
+                emitSignal("init_success");
+            }
+
+            @Override
+            public void onInitializeFailed(AdNetworks adNetworks, AdNetworkError adNetworkError) {
+                emitSignal("init_failed", adNetworkError.getErrorDomain(), adNetworkError.getErrorMessage());
+            }
+        });
+
+        if (p_override_gdrp)
+            TapsellPlus.setGDPRConsent(m_activity, true);
     }
 
     @UsedByGodot
-    public void request_ad(String p_zone_id) {
-        m_zone_id = p_zone_id;
-        Tapsell.requestAd(m_activity.getApplicationContext(), m_zone_id, new TapsellAdRequestOptions(),
-            new TapsellAdRequestListener() {
-                public void onAdAvailable(String ad_id) {
-                    m_ad_id = ad_id;
-                    emitSignal("request_ad_on_ad_available", ad_id);
-                    // Toast.makeText(m_activity, "requestAd: " + ad_id, Toast.LENGTH_LONG).show();
-                }
-
-                public void onError(String message) {
-                    m_ad_id = "";
-                    emitSignal("request_ad_on_error", message);
-                    // Toast.makeText(m_activity, "requestAd error: " + message, Toast.LENGTH_LONG).show();
-                }
+    public void create_banner_frame(int width, int height, int gravity) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+//                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 150, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(width, height, gravity);
+                FrameLayout fl = new FrameLayout(m_activity);
+                fl.setLayoutParams(lp);
+                fl.setId(R.id.ad_banner);
+                m_activity.addContentView((View) fl, (ViewGroup.LayoutParams) lp);
             }
-        );
+        });
     }
 
     @UsedByGodot
-    public void show_ad() {
-        Tapsell.showAd(m_activity.getApplicationContext(), m_zone_id, m_ad_id, new TapsellShowOptions(),
-            new TapsellAdShowListener() {
-                public void onOpened() {
-                    emitSignal("show_ad_on_opened");
-                    // Toast.makeText(m_activity, "Open", Toast.LENGTH_LONG).show();
-                }
+    public void request_banner_ad(String p_zone_id, int p_banner_type) {
+        TapsellPlusBannerType tapsell_banner_type = TapsellPlusBannerType.BANNER_320x50;
 
-                public void onClosed() {
-                    emitSignal("show_ad_on_closed");
-                    // Toast.makeText(m_activity, "Close", Toast.LENGTH_LONG).show();
-                }
+        switch(p_banner_type) {
+            case 0: tapsell_banner_type = TapsellPlusBannerType.BANNER_320x50; break;
+            case 1: tapsell_banner_type = TapsellPlusBannerType.BANNER_320x90; break;
+            case 2: tapsell_banner_type = TapsellPlusBannerType.BANNER_320x100; break;
+            case 3: tapsell_banner_type = TapsellPlusBannerType.BANNER_250x250; break;
+            case 4: tapsell_banner_type = TapsellPlusBannerType.BANNER_300x250; break;
+            case 5: tapsell_banner_type = TapsellPlusBannerType.BANNER_468x60; break;
+            case 6: tapsell_banner_type = TapsellPlusBannerType.BANNER_728x90; break;
+            case 7: tapsell_banner_type = TapsellPlusBannerType.BANNER_160x600; break;
+        }
 
-                public void onError(String message) {
-                    emitSignal("show_ad_on_error", message);
-                    // Toast.makeText(m_activity, "showAd error: " + message, Toast.LENGTH_LONG).show();
-                }
-
-                public void onRewarded(boolean completed) {
-                    emitSignal("show_ad_on_rewarded", completed);
-                    // Toast.makeText(m_activity, "rewarded: " + completed, Toast.LENGTH_LONG).show();
-                }
+        TapsellPlus.requestStandardBannerAd(m_activity, p_zone_id, tapsell_banner_type, new AdRequestCallback() {
+            @Override
+            public void response(TapsellPlusAdModel tapsellPlusAdModel) {
+                super.response(tapsellPlusAdModel);
+                emitSignal("banner_ad_request_response", p_zone_id, tapsellPlusAdModel.getResponseId());
             }
-        );
 
-        m_ad_id = "";
+            @Override
+            public void error(String s) {
+                super.error(s);
+                emitSignal("banner_ad_request_error", p_zone_id, s);
+            }
+        });
+    }
+
+    @UsedByGodot
+    public void show_banner_ad(String p_id) {
+        TapsellPlus.showStandardBannerAd(m_activity, p_id, m_activity.findViewById(R.id.ad_banner), new AdShowListener() {
+            @Override
+            public void onOpened(TapsellPlusAdModel tapsellPlusAdModel) {
+                super.onOpened(tapsellPlusAdModel);
+                emitSignal("banner_ad_opened", tapsellPlusAdModel.getResponseId());
+            }
+
+            @Override
+            public void onClosed(TapsellPlusAdModel tapsellPlusAdModel) {
+                super.onClosed(tapsellPlusAdModel);
+                emitSignal("banner_ad_closed", tapsellPlusAdModel.getResponseId());
+            }
+
+            @Override
+            public void onRewarded(TapsellPlusAdModel tapsellPlusAdModel) {
+                super.onRewarded(tapsellPlusAdModel);
+                emitSignal("banner_ad_rewarded", tapsellPlusAdModel.getResponseId());
+            }
+
+            @Override
+            public void onError(TapsellPlusErrorModel tapsellPlusErrorModel) {
+                super.onError(tapsellPlusErrorModel);
+                emitSignal("banner_ad_show_error", tapsellPlusErrorModel.getResponseId(), tapsellPlusErrorModel.getErrorMessage());
+            }
+        });
+    }
+
+    @UsedByGodot
+    public void request_video_ad(String p_zone_id) {
+        TapsellPlus.requestRewardedVideoAd(m_activity, p_zone_id, new AdRequestCallback() {
+            @Override
+            public void response(TapsellPlusAdModel tapsellPlusAdModel) {
+                super.response(tapsellPlusAdModel);
+                emitSignal("video_ad_request_response", p_zone_id, tapsellPlusAdModel.getResponseId());
+            }
+
+            @Override
+            public void error(String s) {
+                super.error(s);
+                emitSignal("video_ad_request_error", p_zone_id, s);
+            }
+        });
+    }
+
+    @UsedByGodot
+    public void show_video_ad(String p_id) {
+        TapsellPlus.showRewardedVideoAd(m_activity, p_id, new AdShowListener() {
+            @Override
+            public void onOpened(TapsellPlusAdModel tapsellPlusAdModel) {
+                super.onOpened(tapsellPlusAdModel);
+                emitSignal("video_ad_opened", tapsellPlusAdModel.getResponseId());
+            }
+
+            @Override
+            public void onClosed(TapsellPlusAdModel tapsellPlusAdModel) {
+                super.onClosed(tapsellPlusAdModel);
+                emitSignal("video_ad_closed", tapsellPlusAdModel.getResponseId());
+            }
+
+            @Override
+            public void onRewarded(TapsellPlusAdModel tapsellPlusAdModel) {
+                super.onRewarded(tapsellPlusAdModel);
+                emitSignal("video_ad_rewarded", tapsellPlusAdModel.getResponseId());
+            }
+
+            @Override
+            public void onError(TapsellPlusErrorModel tapsellPlusErrorModel) {
+                super.onError(tapsellPlusErrorModel);
+                emitSignal("video_ad_show_error", tapsellPlusErrorModel.getResponseId(), tapsellPlusErrorModel.getErrorMessage());
+            }
+        });
     }
 }

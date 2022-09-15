@@ -31,6 +31,8 @@ android {
 allprojects {
     repositories {
         jcenter()
+        mavenCentral()
+
         flatDir {
             dirs 'libs'
         }
@@ -45,6 +47,6 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
-    implementation 'ir.tapsell.sdk:tapsell-sdk-android:4.7.2'
-    compileOnly(name:'godot-lib.3.3.2.stable.release', ext:'aar')
+    implementation 'ir.tapsell.plus:tapsell-plus-sdk-android:2.1.6'
+    compileOnly(name:'godot-lib.3.4.3.stable.release', ext:'aar')
 }
