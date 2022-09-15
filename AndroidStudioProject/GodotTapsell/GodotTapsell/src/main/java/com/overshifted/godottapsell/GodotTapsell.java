@@ -157,6 +157,11 @@ public class GodotTapsell extends GodotPlugin {
     }
 
     @UsedByGodot
+    public void destroy_banner_ad(String p_id) {
+        TapsellPlus.destroyStandardBanner(m_activity, p_id, m_activity.findViewById(R.id.ad_banner));
+    }
+
+    @UsedByGodot
     public void request_video_ad(String p_zone_id) {
         TapsellPlus.requestRewardedVideoAd(m_activity, p_zone_id, new AdRequestCallback() {
             @Override

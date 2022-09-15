@@ -98,6 +98,9 @@ func request_banner_ad(zone: String, banner_type: int):
 func show_banner_ad(id: String):
 	if plugin: plugin.show_banner_ad(id)
 
+func destroy_banner_ad(id: String):
+	if plugin: plugin.destroy_banner_ad(id)
+
 func request_video_ad(zone: String):
 	if plugin: plugin.request_video_ad(zone)
 
