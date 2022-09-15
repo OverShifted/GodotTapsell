@@ -28,7 +28,7 @@ func on_video_ad_request_response(zone: String, id: String):
     Tapsell.show_video_ad(id)
 ```
 ### Standard banner ad
-> ⚠️ Warning: Banner add removal is not implemented yet.
+> ⚠️ Warning: Banner ad removal is not implemented yet.
 
 Anywhere in your code:
 ```gd
