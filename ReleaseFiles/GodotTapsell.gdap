@@ -5,6 +5,4 @@ binary_type="local"
 binary="GodotTapsell-release.aar"
 
 [dependencies]
-
-remote=["ir.tapsell.sdk:tapsell-sdk-android:4.7.1"]
-
+remote=["ir.tapsell.plus:tapsell-plus-sdk-android:2.1.6"]
