@@ -1,6 +1,6 @@
 # GodotTapsell
 <p align="center">
-  <img src="images/logo.svg" alt="GodotTapsell Logo"/>
+  <img src="images/logo.svg" alt="GodotTapsell Logo" />
 </p>
 
 [Tapsell](https://tapsell.ir) ads implementation for the Godot game-engine.
