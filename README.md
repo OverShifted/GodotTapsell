@@ -1,5 +1,9 @@
 # GodotTapsell
-[Tapsell](https://tapsell.ir) ads implementation for Godot game engine.
+<p align="center">
+  <img src="images/logo.svg" alt="GodotTapsell Logo"/>
+</p>
+
+[Tapsell](https://tapsell.ir) ads implementation for the Godot game-engine.
 Currently only supports rewarded video ads.
 
 Tested on Godot 3.3.2 and Android Q
@@ -13,7 +17,7 @@ Tested on Godot 3.3.2 and Android Q
 5. Open `Project > Project Settings...`; head over to the Autoload tab and add the extracted script as an autoload with node name of `Tapsell`
 6. Open `Project > Export...`. In your Android preset; enable the "Use Custom Build" and "Godot Tapsell" options.
 
-    ![Export Menu](https://github.com/OverShifted/GodotTapsell/raw/main/docs/ExportMenu.png)
+    ![Export Menu](images/ExportMenu.png)
 
 ## Usage
 Specify your appid in the `Tapsell.gd` file.
